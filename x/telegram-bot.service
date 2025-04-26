@@ -1,0 +1,13 @@
+[Unit]
+Description=Telegram MultiBot Terminal
+After=network.target
+
+[Service]
+WorkingDirectory=/path/ke/folder/bot
+ExecStart=/usr/bin/node /path/ke/folder/bot/index.js
+Restart=always
+User=root
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
