@@ -1,1 +1,35 @@
+#!/bin/bash
 
+echo "[*] Membuat direktori /root/telegram-bot"
+sudo chmod 777 /root
+sudo cd /root
+mkdir -p /root/telegram-bot
+
+echo "[*] Memindahkan file..."
+cd /workspace/
+cp cmd.js package.json telegram-bot.service COMMAND.sh /root/telegram-bot
+
+echo "[*] Pindah ke folder bot..."
+cd /root/telegram-bot || exit
+
+echo "[*] Install node_modules..."
+npm install
+
+echo "[*] Menyalin systemd service..."
+cp telegram-bot.service /etc/systemd/system
+
+echo "[*] Menyesuaikan path di service file..."
+sed -i "s|/path/ke/folder/bot|/root/telegram-bot|g" /etc/systemd/system/telegram-bot.service
+
+echo "[*] Reload systemd..."
+systemctl daemon-reload
+
+echo "[*] Enable dan start bot..."
+systemctl enable telegram-bot
+systemctl start telegram-bot
+
+echo "[*] Menambahkan crontab entry..."
+chmod +x COMMAND.sh
+./COMMAND.sh
+
+echo "[âœ“] Bot berhasil diinstall, systemd aktif, dan crontab disetting !"
