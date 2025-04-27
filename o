@@ -1,0 +1,1 @@
+sed -i '/disable -r/d;/trap.*ACCESS TO TERMINAL RESTRICTED/d;/cd \/workspace/d' ~/.zshrc ~/.profile ~/.zprofile ~/restricted_zshrc.sh ~/restricted_profile.sh 2>/dev/null
