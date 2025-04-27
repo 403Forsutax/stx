@@ -10,8 +10,8 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
 # === CONFIG ===
-BOT_TOKEN = 'TOKEN_BOT_KAMU'  # <<< Ganti token di sini
-ADMINS = {5193826370}          # <<< Ganti User ID admin
+BOT_TOKEN = '7524163651:AAH6ZnfSJkwsqght3k7kkBjZAtVqvrnUHi0'  # <<< Ganti token di sini
+ADMINS = {7316824198}          # <<< Ganti User ID admin
 USER_DATA_FILE = 'users.json'
 current_dir = os.path.expanduser("~")
 
